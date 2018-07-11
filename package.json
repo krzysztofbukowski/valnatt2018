@@ -4,7 +4,8 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack-dev-server",
-    "test": "jest"
+    "test": "jest",
+    "tslint": "tslint --project tsconfig.json"
   },
   "dependencies": {
     "react": "16.4.1",
@@ -29,6 +30,7 @@
     "react-test-renderer": "16.4.1",
     "ts-jest": "23.0.0",
     "ts-loader": "4.4.2",
+    "tslint": "5.10.0",
     "typescript": "2.9.2",
     "webpack": "4.15.1",
     "webpack-cli": "3.0.8",

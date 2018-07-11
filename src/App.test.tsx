@@ -8,4 +8,4 @@ describe('App', () => {
 
     expect(component.length).toBe(1);
   });
-})
+});

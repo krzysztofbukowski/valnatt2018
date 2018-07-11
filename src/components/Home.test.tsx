@@ -8,4 +8,4 @@ describe('Home', () => {
 
     expect(component.length).toBe(1);
   });
-})
+});
