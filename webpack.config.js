@@ -1,10 +1,12 @@
+const devMode = process.env.NODE_ENV !== 'production';
+
 const webpack = require('webpack');
 const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
   template: './public/index.html',
-  filename: 'index.html',
+  filename: '../index.html',
   inject: 'body'
 });
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -19,7 +21,7 @@ const config = {
   devtool: 'source-map',
   entry: './src/index.tsx',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist/static'),
     filename: 'bundle.js'
   },
   mode: process.env.NODE_ENV,
@@ -37,9 +39,22 @@ const config = {
       {
         test: /\.scss$/,
         use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'sass-loader',
+          devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+              minimize: {
+                discardComments: { removeAll: true }
+              }
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true
+            }
+          }
         ],
       }
     ]
@@ -52,7 +67,7 @@ const config = {
       filename: '[name].[hash].css',
       chunkFilename: '[id].[hash].css',
     }),
-    new webpack.HotModuleReplacementPlugin()    
+    new webpack.HotModuleReplacementPlugin()
   ],
   resolve: {
     // Add `.ts` and `.tsx` as a resolvable extension.
