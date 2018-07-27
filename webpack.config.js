@@ -6,17 +6,19 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
   template: './public/index.html',
-  filename: '../index.html',
   inject: 'body'
 });
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const config = {
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    contentBase: path.join(__dirname, 'public'),
     compress: true,
+    clientLogLevel: 'none',
     port: 9000,
-    hot: true
+    hot: true,
+    watchContentBase: true,
+    publicPath: '/'
   },
   devtool: 'source-map',
   entry: './src/index.tsx',
