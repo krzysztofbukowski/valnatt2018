@@ -1,0 +1,17 @@
+@import '../../themes/ab';
+
+.button {
+  $button-height: 41px;
+
+  background-color: $background-color;
+  border: 1px solid $border-color;
+  border-radius: #{$button-height / 2};
+  box-shadow: 0 0 1px rgba(0,0,0, .1);
+  cursor: pointer;
+  height: $button-height;
+  font-size: $font-size;
+  font-weight: bold;
+  outline: none;
+  padding: 0 27px;
+  text-transform: uppercase;
+}

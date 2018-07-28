@@ -1,0 +1,24 @@
+$font-size: 13px!default;
+$font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif!default;
+
+$gridSize: 8px;
+$gridSize2x: $gridSize * 2;
+$gridSize3x: $gridSize * 3;
+
+$app-background-color: #ffffff!default;
+$background-color: #fafafa!default;
+$border-color: #d6d6d6!default;
+$border-radius: 4px!default;
+
+// select
+
+$select-background-color: #ffffff!default;
+$select-background-color-selected: $background-color!default;
+$select-background-color-disabled: #ffffff!default;
+
+// tabs
+
+$tabs-background-color-inactive: #ffffff!default;
+$tabs-background-color-active: $background-color!default;
+$tabs-background-color-content: $background-color!default;
+$tabs-border-color: $border-color!default;

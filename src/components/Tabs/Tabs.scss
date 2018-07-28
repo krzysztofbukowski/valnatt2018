@@ -1,0 +1,39 @@
+@import '../../themes/ab';
+
+.tabs {
+  &__header {
+    display: flex;
+    flex-direction: row;
+  }
+
+  &__tab {
+    background-color: $tabs-background-color-inactive;
+    border:1px solid $tabs-border-color;
+    border-radius: 5px 5px 0 0;   
+    cursor: pointer; 
+    flex-basis: 0;
+    flex-grow: 1;    
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase; 
+    margin-right: -1px;   
+    padding: 15px 0;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &--active {
+      background-color: $tabs-background-color-active;
+      border-bottom: 1px solid transparent;
+    }
+  }
+
+  &__content {
+    background-color: $tabs-background-color-content;
+    border: 1px solid $tabs-border-color;
+    border-radius: 0 0 4px 4px;
+    border-top:  none;
+    padding: $gridSize3x;
+  }
+}
