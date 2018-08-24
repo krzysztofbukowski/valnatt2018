@@ -3,8 +3,8 @@ import './Select.scss';
 import className from '../../utils/className';
 
 export interface OptionGroup {
-  label: string,
-  options: { [key: string]: string }
+  label: string;
+  options: { [key: string]: string };
 }
 
 export interface SelectProps {
@@ -90,8 +90,8 @@ class Select extends React.Component<SelectProps, SelectState> {
             label={optionGroup.label}>
             {this.renderOptions(optionGroup.options)}
           </optgroup>
-        )
-      })
+        );
+      });
   }
 
   private onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {

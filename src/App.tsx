@@ -6,12 +6,13 @@ import SelectGroup from './components/SelectGroup/SelectGroup';
 import Tabs from './components/Tabs/Tabs';
 import TabContent from './components/Tabs/TabContent';
 import SearchBox from './components/SearchBox/SearchBox';
+import { connect } from 'react-redux';
 
 interface AppProps {
   name: string;
 }
 
-export default class App extends React.Component<AppProps, {}> {
+export class App extends React.Component<AppProps, {}> {
   render() {
     const counties = {
       '10': 'Blekinge län',
@@ -93,3 +94,5 @@ export default class App extends React.Component<AppProps, {}> {
     );
   }
 }
+
+export default connect()(App);
