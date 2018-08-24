@@ -67,7 +67,7 @@ export default class App extends React.Component<AppProps, {}> {
                 {
                   label: 'Gamla valdata',
                   options: elections
-                }                
+                }
               ]}
               name="election"
               current="election_val2018R"
@@ -76,7 +76,7 @@ export default class App extends React.Component<AppProps, {}> {
         </div>
 
         <SelectGroup name="area">
-          <Select options={counties} name="county" title="Välj län" />
+        <Select options={counties} name="county" title="Välj län" />
           <Select options={municipalities} name="municipality" title="Välj kommun" />
           <Select options={{}} name="division" title="Välj valkrets" />
           <Select options={{}} name="constituency" title="Välj valdistrikt" />

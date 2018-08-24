@@ -3,8 +3,12 @@ import * as ReactDOM from 'react-dom';
 import './index.scss';
 
 import App from './App';
+import { Provider } from 'react-redux';
+import appStore from './store';
 
 ReactDOM.render(
-  <App name="World" />,
+  <Provider store={appStore}>
+    <App name="World" />
+  </Provider>,
   document.getElementById('root') as HTMLElement
 );
