@@ -1,0 +1,1 @@
+export const ACTION_LOAD_RESULTS = 'LOAD_RESULTS';

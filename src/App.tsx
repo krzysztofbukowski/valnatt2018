@@ -7,9 +7,14 @@ import Tabs from './components/Tabs/Tabs';
 import TabContent from './components/Tabs/TabContent';
 import SearchBox from './components/SearchBox/SearchBox';
 import { connect } from 'react-redux';
+import AppState from './state';
+import * as actions from './actions';
 
 interface AppProps {
   name: string;
+  dispatch: {
+    onAreaSelected: (areaId: string) => void
+  };
 }
 
 export class App extends React.Component<AppProps, {}> {
@@ -77,10 +82,26 @@ export class App extends React.Component<AppProps, {}> {
         </div>
 
         <SelectGroup name="area">
-        <Select options={counties} name="county" title="Välj län" />
-          <Select options={municipalities} name="municipality" title="Välj kommun" />
-          <Select options={{}} name="division" title="Välj valkrets" />
-          <Select options={{}} name="constituency" title="Välj valdistrikt" />
+          <Select options={counties}
+            name="county"
+            title="Välj län"
+            onChange={this.props.dispatch.onAreaSelected}
+          />
+          <Select options={municipalities}
+            name="municipality"
+            title="Välj kommun"
+            onChange={this.props.dispatch.onAreaSelected}
+          />
+          <Select options={{}}
+            name="division"
+            title="Välj valkrets"
+            onChange={this.props.dispatch.onAreaSelected}
+          />
+          <Select options={{}}
+            name="constituency"
+            title="Välj valdistrikt"
+            onChange={this.props.dispatch.onAreaSelected}
+          />
         </SelectGroup>
         <Tabs tabs={['Alla partier', 'Välj ett parti']}>
           <TabContent>
@@ -95,4 +116,16 @@ export class App extends React.Component<AppProps, {}> {
   }
 }
 
-export default connect()(App);
+const mapStateToProps = (state: AppState) => ({
+
+});
+
+const mapDispatchToProps = dispatch => ({
+  dispatch: {
+    onAreaSelected: (areaId: string) => {
+      dispatch(actions.loadResultsAction(areaId));
+    }
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
