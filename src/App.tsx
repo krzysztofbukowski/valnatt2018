@@ -12,43 +12,21 @@ import * as actions from './actions';
 
 interface AppProps {
   name: string;
+  lan: any[];
+  kommun: any[];
+  valkrets: any[];
+  valdistrikt: any[];
   dispatch: {
-    onAreaSelected: (areaId: string) => void
+    onAreaChanged: (areaId: string) => void
   };
 }
 
 export class App extends React.Component<AppProps, {}> {
   render() {
     const counties = {
-      '10': 'Blekinge län',
-      '20': 'Dalarnas län',
-      '09': 'Gotlands län',
-      '21': 'Gävleborgs län',
-      '13': 'Hallands län',
-      '23': 'Jämtlands län',
-      '06': 'Jönköpings län',
-      '08': 'Kalmar län',
-      '07': 'Kronobergs län',
-      '25': 'Norrbottens län',
-      '12': 'Skåne län',
-      '01': 'Stockholms län',
-      '04': 'Södermanlands län',
-      '03': 'Uppsala län',
-      '17': 'Värmlands län',
-      '24': 'Västerbottens län',
-      '22': 'Västernorrlands län',
-      '19': 'Västmanlands län',
-      '14': 'Västra Götalands län',
-      '18': 'Örebro län',
-      '05': 'Östergötlands län'
     };
 
     const municipalities = {
-      '1082': 'Karlshamn',
-      '1080': 'Karlskrona',
-      '1060': 'Olofström',
-      '1081': 'Ronneby',
-      '1083': 'Sölvesborg'
     };
 
     const elections = {
@@ -85,22 +63,22 @@ export class App extends React.Component<AppProps, {}> {
           <Select options={counties}
             name="county"
             title="Välj län"
-            onChange={this.props.dispatch.onAreaSelected}
+            onChange={this.props.dispatch.onAreaChanged}
           />
           <Select options={municipalities}
             name="municipality"
             title="Välj kommun"
-            onChange={this.props.dispatch.onAreaSelected}
+            onChange={this.props.dispatch.onAreaChanged}
           />
           <Select options={{}}
             name="division"
             title="Välj valkrets"
-            onChange={this.props.dispatch.onAreaSelected}
+            onChange={this.props.dispatch.onAreaChanged}
           />
           <Select options={{}}
             name="constituency"
             title="Välj valdistrikt"
-            onChange={this.props.dispatch.onAreaSelected}
+            onChange={this.props.dispatch.onAreaChanged}
           />
         </SelectGroup>
         <Tabs tabs={['Alla partier', 'Välj ett parti']}>
@@ -114,16 +92,24 @@ export class App extends React.Component<AppProps, {}> {
       </div>
     );
   }
+
+  public componentWillMount() {
+    this.props.dispatch.onAreaChanged('national');
+  }
 }
 
 const mapStateToProps = (state: AppState) => ({
-
+  lan: [],
+  kommun: [],
+  valkrets: [],
+  valdistrikt: []
 });
 
 const mapDispatchToProps = dispatch => ({
   dispatch: {
-    onAreaSelected: (areaId: string) => {
-      dispatch(actions.loadResultsAction(areaId));
+    onAreaChanged: (areaId: string) => {
+      dispatch(actions.setAreaId(areaId));
+      dispatch(actions.loadElectionResultsAction(areaId));
     }
   }
 });
