@@ -4,13 +4,13 @@ import className from '../../utils/className';
 
 export interface OptionGroup {
   label: string;
-  options: { [key: string]: string };
+  options: { id: string, name: string }[];
 }
 
 export interface SelectProps {
   name: string;
   title?: string;
-  options: { [key: string]: string };
+  options?: {id: string, name: string}[];
   optionGroups?: Array<OptionGroup>;
   current?: string;
   disabled?: boolean;
@@ -65,18 +65,18 @@ class Select extends React.Component<SelectProps, SelectState> {
     }
   }
 
-  private hasOptions(options: { [key: string]: string; }) {
-    return options && Object.keys(options).length > 0;
+  private hasOptions(options: {id: string, name: string}[]) {
+    return options && options.length > 0;
   }
 
   private hasOptionGroups(options: Array<OptionGroup>) {
     return options && Object.keys(options).length > 0;
   }
 
-  private renderOptions(options: { [key: string]: string }) {
-    return Object.keys(options).map((optionIndex: string) => {
+  private renderOptions(options: {id: string, name: string}[]) {
+    return options.map((option: {id: string, name: string}, optionIndex: number) => {
       return (
-        <option key={optionIndex} value={optionIndex}>{options[optionIndex]}</option>
+        <option key={optionIndex} value={option.id}>{option.name}</option>
       );
     });
   }

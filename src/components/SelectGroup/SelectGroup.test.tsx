@@ -15,8 +15,8 @@ describe('Button', () => {
   it('should render with children without failure', () => {
     const component = shallow(
     <SelectGroup name="test">
-      <Select name="test" title="test" options={{}}/>
-      <Select name="test" title="test" options={{}}/>
+      <Select name="test" title="test" options={[]}/>
+      <Select name="test" title="test" options={[]}/>
     </SelectGroup>
   );
 

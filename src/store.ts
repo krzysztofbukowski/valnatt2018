@@ -1,14 +1,46 @@
 import { applyMiddleware, createStore, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import AppState, {AREA_LEVEL} from './state';
+import AppState from './state';
 import valnattAppReducers from './reducers';
-import logger from 'redux-logger';
+import { AREA_LEVEL } from './utils/map';
 
 const initialState: AppState = {
   areaId: 'national',
-  areaLevel: AREA_LEVEL.national,
+  areaLevel: AREA_LEVEL.NATIONAL,
+  nextAreaLevel: AREA_LEVEL.LAN,
   lan: [],
-  results: undefined
+  kommun: [],
+  valkrets: [],
+  valdistrikt: [],
+  results: undefined,
+  currentElections: [
+    {
+      id: 'election_val2018R',
+      name: 'Riksdagsval 2018'
+    },
+    {
+      id: 'election_val2018K',
+      name: 'Landstingsval 2018'
+    },
+    {
+      id: 'election_val2018L',
+      name: 'Kommunalval 2018'
+    }
+  ],
+  pastElections: [
+    {
+      id: 'election_val2014R',
+      name: 'Riksdagsval 2014'
+    },
+    {
+      id: 'election_val2014K',
+      name: 'Landstingsval 2014'
+    },
+    {
+      id: 'election_val2014L',
+      name: 'Kommunalval 2014'
+    }
+  ]
 };
 
 declare global {
@@ -23,14 +55,9 @@ const composeEnhancers =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) : compose;
 
 const enhancer = composeEnhancers(
-  applyMiddleware(logger, thunkMiddleware),
+  applyMiddleware(thunkMiddleware),
   // other store enhancers if any
 );
 const store = createStore(valnattAppReducers, initialState, enhancer);
-
-// const store = createStore(valnattAppReducers, initialState, 
-//   applyMiddleware(
-
-//   ));
 
 export default store;

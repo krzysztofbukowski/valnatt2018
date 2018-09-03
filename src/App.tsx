@@ -9,32 +9,25 @@ import SearchBox from './components/SearchBox/SearchBox';
 import { connect } from 'react-redux';
 import AppState from './state';
 import * as actions from './actions';
+import { Area, mapAreaIdToAreaLevel, AREA_LEVEL } from './utils/map';
 
-interface AppProps {
+interface AppPropsDispatch {
+  onAreaChanged: (areaId: string) => void
+}
+
+export interface AppProps {
   name: string;
-  lan: any[];
-  kommun: any[];
-  valkrets: any[];
-  valdistrikt: any[];
-  dispatch: {
-    onAreaChanged: (areaId: string) => void
-  };
+  lan: Array<Area>;
+  kommun: Array<Area>;
+  valkrets: Array<Area>;
+  valdistrikt: Array<Area>;
+  currentElections: any[];
+  pastElections: any[];
+  dispatch: AppPropsDispatch;
 }
 
 export class App extends React.Component<AppProps, {}> {
   render() {
-    const counties = {
-    };
-
-    const municipalities = {
-    };
-
-    const elections = {
-      'election_val2018R': 'Riksdagsval 2018',
-      'election_val2018K': 'Landstingsval 2018',
-      'election_val2018L': 'Kommunalval 2018'
-    };
-
     return (
       <div className="App">
         <div className="search-nav">
@@ -42,15 +35,14 @@ export class App extends React.Component<AppProps, {}> {
           <SearchBox placeholder="SKRIV IN DIN ADRESS" />
           <div className="search-nav__election-selector">
             <Select
-              options={elections}
               optionGroups={[
                 {
                   label: 'Aktualla val',
-                  options: elections
+                  options: this.props.currentElections
                 },
                 {
                   label: 'Gamla valdata',
-                  options: elections
+                  options: this.props.pastElections
                 }
               ]}
               name="election"
@@ -60,22 +52,22 @@ export class App extends React.Component<AppProps, {}> {
         </div>
 
         <SelectGroup name="area">
-          <Select options={counties}
+          <Select options={this.props.lan}
             name="county"
             title="Välj län"
             onChange={this.props.dispatch.onAreaChanged}
           />
-          <Select options={municipalities}
+          <Select options={this.props.kommun}
             name="municipality"
             title="Välj kommun"
             onChange={this.props.dispatch.onAreaChanged}
           />
-          <Select options={{}}
+          <Select options={this.props.valkrets}
             name="division"
             title="Välj valkrets"
             onChange={this.props.dispatch.onAreaChanged}
           />
-          <Select options={{}}
+          <Select options={this.props.valdistrikt}
             name="constituency"
             title="Välj valdistrikt"
             onChange={this.props.dispatch.onAreaChanged}
@@ -98,18 +90,23 @@ export class App extends React.Component<AppProps, {}> {
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
-  lan: [],
-  kommun: [],
-  valkrets: [],
-  valdistrikt: []
+const mapStateToProps = (state: AppState): AppProps => ({
+  lan: state.lan,
+  kommun: state.kommun,
+  valkrets: state.valkrets,
+  valdistrikt: state.valdistrikt,
+  name: '',
+  currentElections: state.currentElections,
+  pastElections: state.pastElections,
+  dispatch: {} as AppPropsDispatch
 });
 
 const mapDispatchToProps = dispatch => ({
   dispatch: {
     onAreaChanged: (areaId: string) => {
+      dispatch(actions.resetSelect(mapAreaIdToAreaLevel(areaId) as AREA_LEVEL));
       dispatch(actions.setAreaId(areaId));
-      dispatch(actions.loadElectionResultsAction(areaId));
+      dispatch(actions.loadDataForArea(areaId));
     }
   }
 });
