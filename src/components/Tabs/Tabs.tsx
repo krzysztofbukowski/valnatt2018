@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import './tabs.scss';
+import './Tabs.scss';
 import className from '../../utils/className';
 import { TabContentProps } from './TabContent';
 
