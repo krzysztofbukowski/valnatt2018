@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import './tabs.scss';
 import className from '../../utils/className';
-import TabContent, { TabContentProps } from './TabContent';
+import { TabContentProps } from './TabContent';
 
 export interface TabsProps {
   tabs: string[];
