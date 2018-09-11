@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import './Button.scss';
 
-interface ButtonProps {
+export interface ButtonProps {
   label: string;
   onClick?: () => void;
 }

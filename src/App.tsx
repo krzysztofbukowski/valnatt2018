@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import AppState, { MessageState } from './state';
 import * as actions from './actions';
 import { Area, mapAreaIdToAreaLevel, AREA_LEVEL } from './utils/map';
+import ButtonGroup from './components/ButtonGroup/ButtonGroup';
 import Messenger from './components/Messenger/Messenger';
 
 interface AppPropsDispatch {
@@ -81,7 +82,11 @@ export class App extends React.Component<AppProps, {}> {
         </SelectGroup>
         <Tabs tabs={['Alla partier', 'Välj ett parti']}>
           <TabContent>
-            Alla partier content
+            <ButtonGroup>
+              <Button label="PROCENT"/>
+              <Button label="RÖSTER"/>
+              <Button label="MANDAT"/>
+            </ButtonGroup>
           </TabContent>
           <TabContent>
             Välj ett parti content

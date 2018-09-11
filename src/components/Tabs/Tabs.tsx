@@ -69,5 +69,5 @@ export default class Tabs extends React.Component<TabsProps, TabsState> {
     this.setState({
       activeIndex: index
     });
-  };
+  }
 }
