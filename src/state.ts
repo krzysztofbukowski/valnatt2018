@@ -1,11 +1,17 @@
 import { AREA_LEVEL, Area } from './utils/map';
 
+export interface MessageState {
+  isError: boolean;
+  content: string;
+}
+
 export default interface AppState {
   areaId: string;
   areaLevel: AREA_LEVEL;
   nextAreaLevel: AREA_LEVEL;
-  lan: Area[];
   kommun: Area[];
+  lan: Area[];
+  message: MessageState;
   valkrets: Area[];
   valdistrikt: Area[];
   results: any;

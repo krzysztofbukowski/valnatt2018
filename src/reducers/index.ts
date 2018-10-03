@@ -1,6 +1,6 @@
 import AppState from '../state';
 import { ACTIONS } from '../actions/types';
-import { AnyAction, SetAreaAction, ReceiveDataAction, ResetSelectAction } from '../actions';
+import { AnyAction, SetAreaAction, ReceiveDataAction, ResetSelectAction, SetMessageAction } from '../actions';
 import * as MapUtils from '../utils/map';
 
 export default (prevState: AppState, action: AnyAction) => {
@@ -14,6 +14,12 @@ export default (prevState: AppState, action: AnyAction) => {
         areaId: setAreaIdAction.areaId,
         areaLevel,
         nextAreaLevel: MapUtils.mapAreaLevelToNextAreaLevel(areaLevel)
+      };
+    case ACTIONS.SET_MESSAGE:
+      const setMessageAction = action as SetMessageAction;
+      return {
+        ...prevState,
+        message: setMessageAction.message
       };
     case ACTIONS.RECEIVE_ELECTION_RESULTS:
       return prevState;
@@ -68,8 +74,8 @@ export default (prevState: AppState, action: AnyAction) => {
         case MapUtils.AREA_LEVEL.VALKRETS:
           valdistrikt = [];
         default:
-        return {...prevState, kommun, valdistrikt, valkrets};
-      }      
+          return { ...prevState, kommun, valdistrikt, valkrets };
+      }
     default:
       return prevState;
   }

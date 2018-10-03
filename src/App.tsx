@@ -7,12 +7,13 @@ import Tabs from './components/Tabs/Tabs';
 import TabContent from './components/Tabs/TabContent';
 import SearchBox from './components/SearchBox/SearchBox';
 import { connect } from 'react-redux';
-import AppState from './state';
+import AppState, { MessageState } from './state';
 import * as actions from './actions';
 import { Area, mapAreaIdToAreaLevel, AREA_LEVEL } from './utils/map';
+import Messenger from './components/Messenger/Messenger';
 
 interface AppPropsDispatch {
-  onAreaChanged: (areaId: string) => void
+  onAreaChanged: (areaId: string) => void;
 }
 
 export interface AppProps {
@@ -24,12 +25,17 @@ export interface AppProps {
   currentElections: any[];
   pastElections: any[];
   dispatch: AppPropsDispatch;
+  hasMessage: boolean;
+  message: MessageState;
 }
 
 export class App extends React.Component<AppProps, {}> {
   render() {
+    const { message } = this.props;
+
     return (
       <div className="App">
+        {this.props.hasMessage && <Messenger message={message.content} isError={message.isError} />}
         <div className="search-nav">
           <Button label="Rensa" />
           <SearchBox placeholder="SKRIV IN DIN ADRESS" />
@@ -85,7 +91,7 @@ export class App extends React.Component<AppProps, {}> {
     );
   }
 
-  public componentWillMount() {
+  public componentDidMount() {
     this.props.dispatch.onAreaChanged('national');
   }
 }
@@ -98,7 +104,9 @@ const mapStateToProps = (state: AppState): AppProps => ({
   name: '',
   currentElections: state.currentElections,
   pastElections: state.pastElections,
-  dispatch: {} as AppPropsDispatch
+  dispatch: {} as AppPropsDispatch,
+  hasMessage: !!state.message,
+  message: state.message
 });
 
 const mapDispatchToProps = dispatch => ({

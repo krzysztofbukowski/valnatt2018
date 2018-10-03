@@ -2,12 +2,17 @@ $font-size: 13px!default;
 $font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif!default;
 
 $gridSize: 8px;
-$gridSize2x: $gridSize * 2;
-$gridSize3x: $gridSize * 3;
+$gridSize2x: $gridSize * 2; // 16
+$gridSize3x: $gridSize * 3; // 24
 
-$app-background-color: #ffffff!default;
+$color-white: #ffffff!default;
+
+$app-background-color: $color-white!default;
 $background-color: #fafafa!default;
 $border-color: #d6d6d6!default;
+$info-color: #2de444!default;
+$error-color: crimson!default;
+
 $border-radius: 4px!default;
 
 // select
@@ -22,3 +27,4 @@ $tabs-background-color-inactive: #ffffff!default;
 $tabs-background-color-active: $background-color!default;
 $tabs-background-color-content: $background-color!default;
 $tabs-border-color: $border-color!default;
+

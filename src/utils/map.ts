@@ -23,6 +23,17 @@ export const mapAreaIdToAreaLevel = (areaId: string) => {
   }
 };
 
+export const mapAreaIdToMapResolution = (areaId: string) => {
+  let level;
+  if (areaId.length === 2) {
+    level = 10;
+  } else if (areaId.length > 2) {
+    level = areaId === 'national' ? 100 : 1;
+  }
+
+  return level || 100;
+};
+
 export const mapAreaLevelToNextAreaLevel = (areaLevel: AREA_LEVEL) => {
   switch (areaLevel) {
     case AREA_LEVEL.NATIONAL:

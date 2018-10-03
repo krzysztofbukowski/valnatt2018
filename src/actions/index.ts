@@ -1,6 +1,7 @@
 import { ACTIONS } from './types';
 import { AnyAction, Dispatch } from 'redux';
-import { AREA_LEVEL } from '../utils/map';
+import { AREA_LEVEL, mapAreaIdToMapResolution } from '../utils/map';
+import { MessageState } from '../state';
 
 export interface SetAreaAction extends AnyAction {
   areaId: string;
@@ -18,12 +19,23 @@ export interface ResetSelectAction extends AnyAction {
   areaLevel: AREA_LEVEL;
 }
 
+export interface SetMessageAction extends AnyAction {
+  message: MessageState;
+}
+
 export type ReceiveDataAction = ReceiveElectionResultsAction & ReceiveGeodataAction;
 
 export const setAreaId = (areaId: string): SetAreaAction => (
   {
     type: ACTIONS.SET_AREA_ID,
     areaId
+  }
+);
+
+export const setMessage = (message: MessageState): SetMessageAction => (
+  {
+    type: ACTIONS.SET_MESSAGE,
+    message
   }
 );
 
@@ -40,34 +52,41 @@ export const receiveElectionResults = (results: any): ReceiveElectionResultsActi
 );
 
 export const loadElectionResults = (areaId: string) =>
-  (dispatch: Dispatch) => {
+  (dispatch: Dispatch): Promise<{}> => {
     dispatch(requestElectionResults(areaId));
 
-    return fetch(`http://localhost:5000/api/election/val2014R/${areaId}?slutresultat_r`)
-      .then((res: Response) => res.json())
-      .then((data: any) => {
+    return fetch(`http://localhost:4000/api/election/val2018R/${areaId}?slutresultat_r`)
+      .then((res: Response) => {
+        if (!res.ok) {
+          throw new Error('No response');
+        }
+
+        return res.json();
+      })
+      .then((data: {}) => {
         dispatch(receiveElectionResults(data));
         return data;
-      }).catch(e => console.log(e));
+      });
   };
 
 export const loadGeoData = (areaId: string) =>
   (dispatch) => {
     dispatch(requestGeoData(areaId));
 
-    let level = 100;
-    if (areaId.length === 2) {
-      level = 10;
-    } else if (areaId.length > 2) {
-      level = areaId === 'national' ? 100 : 1;
-    }
+    const level = mapAreaIdToMapResolution(areaId);
 
-    return fetch(`http://localhost:5000/api/topojson/val2014/${areaId}/${level}`)
-      .then((res: Response) => res.json())
-      .then((data: any) => {
+    return fetch(`http://localhost:4000/api/topojson/val2018/${areaId}/${level}`)
+      .then((res: Response) => {
+        if (!res.ok) {
+          throw new Error('No response');
+        }
+
+        return res.json();
+      })
+      .then((data: {}) => {
         dispatch(receiveGeoData(data));
         return data;
-      }).catch(e => console.log(e));
+      });
   };
 
 const requestGeoData = (areaId: string) => ({
@@ -82,15 +101,13 @@ export const receiveGeoData = (topojson) => (
   }
 );
 
-export const loadDataForArea = (areaId: string) => 
+export const loadDataForArea = (areaId: string) =>
   (dispatch) => Promise.all([
     dispatch(loadElectionResults(areaId)),
     dispatch(loadGeoData(areaId))
-  ]).then(
-    values => {
-      dispatch(receiveDataForArea(values[0], values[1]));
-    }
-  );
+  ]).then(values => dispatch(receiveDataForArea(values[0], values[1]))).catch((e) => {
+    dispatch(setMessage({ isError: true, content: `Error loading data for ${areaId}` }));
+  });
 
 export const receiveDataForArea = (results: any, topojson: any) => ({
   type: ACTIONS.RECEIVE_DATA_FOR_AREA,
@@ -104,6 +121,7 @@ export const resetSelect = (areaLevel: AREA_LEVEL) => ({
 });
 
 export type AnyAction = SetAreaAction
+  | SetMessageAction
   | ReceiveElectionResultsAction
   | ReceiveGeodataAction
   | ReceiveDataAction

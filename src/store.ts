@@ -8,11 +8,12 @@ const initialState: AppState = {
   areaId: 'national',
   areaLevel: AREA_LEVEL.NATIONAL,
   nextAreaLevel: AREA_LEVEL.LAN,
+  message: null,
   lan: [],
   kommun: [],
   valkrets: [],
   valdistrikt: [],
-  results: undefined,
+  results: null,
   currentElections: [
     {
       id: 'election_val2018R',
@@ -40,7 +41,7 @@ const initialState: AppState = {
       id: 'election_val2014L',
       name: 'Kommunalval 2014'
     }
-  ]
+  ],
 };
 
 declare global {
