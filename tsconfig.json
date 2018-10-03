@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
     "jsx": "react",
-    "sourceMap": true
+    "sourceMap": true,
+    "target": "es6",
+    "lib": [
+      "dom",
+      "es2015"
+    ]
   }
 }
