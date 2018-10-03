@@ -83,9 +83,9 @@ export class App extends React.Component<AppProps, {}> {
         <Tabs tabs={['Alla partier', 'Välj ett parti']}>
           <TabContent>
             <ButtonGroup>
-              <Button label="PROCENT"/>
-              <Button label="RÖSTER"/>
-              <Button label="MANDAT"/>
+              <Button label="PROCENT" />
+              <Button label="RÖSTER" />
+              <Button label="MANDAT" />
             </ButtonGroup>
           </TabContent>
           <TabContent>
