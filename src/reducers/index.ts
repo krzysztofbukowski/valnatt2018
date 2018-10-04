@@ -30,12 +30,7 @@ export default (prevState: AppState, action: AnyAction) => {
       const key = receiveGeodataAction.topojson.key;
       const geometries = receiveGeodataAction.topojson.objects[key].geometries;
       let nextAreaLevel = prevState.nextAreaLevel;
-
-      // if (receiveGeodataAction.results.kommun_kretsar !== undefined) {
-      //   nextAreaLevel = Object.keys(receiveGeodataAction.results.kommun_kretsar).length > 1
-      //     ? MapUtils.AREA_LEVEL.VALKRETS : MapUtils.AREA_LEVEL.VALDISTRIKT;
-      // }
-
+      
       switch (nextAreaLevel) {
         case MapUtils.AREA_LEVEL.LAN:
           return {
@@ -66,6 +61,10 @@ export default (prevState: AppState, action: AnyAction) => {
       let valkrets = prevState.valkrets;
       let valdistrikt = prevState.valdistrikt;
 
+      // fall throughs are intentional here - we want to reset all subsequent levels for a given level
+      // lan -> kommun -> valkrets -> valdistrikt
+
+      // tslint:disable:no-switch-case-fall-through
       switch (resetSelectAction.areaLevel) {
         case MapUtils.AREA_LEVEL.LAN:
           kommun = [];
