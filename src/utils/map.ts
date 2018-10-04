@@ -47,10 +47,11 @@ export const mapAreaLevelToNextAreaLevel = (areaLevel: AREA_LEVEL) => {
   }
 };
 
-export const mapTopojsonToAreas = (results: any): Area[] => results.map((object: any) => ({
-  name: object.properties.LAN_NAMN
-    || object.properties.NAMN_KOM
-    || object.properties.KVK_NAMN
-    || object.properties.VD_NAMN,
-  id: object.properties.ID
-}));
+export const mapTopojsonToAreas = (results: any): Area[] => results.map(
+  (object: any) => ({
+    name: object.properties.VD_NAMN 
+      || object.properties.KVK_NAMN
+      || object.properties.NAMN_KOM
+      || object.properties.LAN_NAMN,
+    id: object.properties.ID
+  }));
