@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './Select.scss';
+import * as styles from './Select.scss';
 import className from '../../utils/className';
 
 export interface OptionGroup {
@@ -38,8 +38,8 @@ class Select extends React.Component<SelectProps, SelectState> {
     const hasOptionGroups = this.hasOptionGroups(optionGroups);
 
     const classes = {
-      'select': true,
-      'selected': this.state.isSelected && hasOptions,
+      [styles.select]: true,
+      [styles.selected]: this.state.isSelected && hasOptions,
     };
 
     return (

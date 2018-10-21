@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import './Tabs.scss';
+import * as styles from './Tabs.scss';
 import className from '../../utils/className';
 import { TabContentProps } from './TabContent';
 
@@ -24,16 +24,16 @@ export default class Tabs extends React.Component<TabsProps, TabsState> {
 
   public render() {
     return (
-      <div className="tabs">
-        <div className="tabs__header">
+      <div className={styles.tabs}>
+        <div className={styles.tabs__header}>
           {
             this.props.tabs.map((tab: string, key: number) => {
               return (
                 <div key={key}
                   className={
                     className({
-                      'tabs__tab': true,
-                      'tabs__tab--active': key === this.state.activeIndex
+                      [styles.tabs__tab]: true,
+                      [styles.tabsTabActive]: key === this.state.activeIndex
                     })
                   }
                   onClick={() => {
@@ -45,7 +45,7 @@ export default class Tabs extends React.Component<TabsProps, TabsState> {
             })
           }
         </div>
-        <div className="tabs__content">
+        <div className={styles.tabs__content}>
           {(this.props.children as React.ReactElement<TabContentProps>[])
             .map((e: React.ReactElement<TabContentProps>, key: number) => {
               const props = {

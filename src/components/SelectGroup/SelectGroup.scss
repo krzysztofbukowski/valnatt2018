@@ -3,14 +3,14 @@
   width: 100%;
   margin: 16px 0;
 
-  & > .select {
-    flex-grow: 1;
-    flex-basis: 0;
-    margin-right: 8px;
-    width: 0;
-
-    &:last-child {
-      margin-right: 0;
+  & > select {
+      flex-grow: 1;
+      flex-basis: 0;
+      margin-right: 8px;
+      width: 0;
+  
+      &:last-child {
+        margin-right: 0;
+      }
     }
-  }
 }

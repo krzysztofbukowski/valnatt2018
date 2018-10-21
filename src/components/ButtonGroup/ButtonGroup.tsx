@@ -1,7 +1,6 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 
-import './ButtonGroup.scss';
+import * as styles from './ButtonGroup.scss';
 import { ButtonProps } from '../Button/Button';
 import className from '../../utils/className';
 
@@ -38,12 +37,12 @@ export default class ButtonGroup extends React.Component<ButtonGroupProps, Butto
   public render() {
     const { children } = this.props;
     const classNameString = className({
-      'button-group__border': true,
-      'button-group__border--animated': this.state.enableAnimation,
+      [styles.buttonGroupBorder]: true,
+      [styles.buttonGroupBorderAnimated]: this.state.enableAnimation,
     });
 
     return (
-      <div className="button-group">
+      <div className={styles.buttonGroup}>
         <div
           className={classNameString}
           style={{ left: this.state.borderLeft, width: this.state.borderWidth }}
@@ -59,7 +58,7 @@ export default class ButtonGroup extends React.Component<ButtonGroupProps, Butto
               };
 
               return (
-                <div key={`button-${key}`} ref={this.ref[key]} className="button-group__button">
+                <div key={`button-${key}`} ref={this.ref[key]} className={styles.buttonGroupButton}>
                   <component.type {...props} />
                 </div>
               );

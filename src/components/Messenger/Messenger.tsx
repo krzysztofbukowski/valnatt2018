@@ -1,6 +1,6 @@
 import * as React from 'react';
 import className from '../../utils/className';
-import './messenger.scss';
+import * as styles from './messenger.scss';
 
 export interface MessengerProps {
   message: string;
@@ -9,8 +9,8 @@ export interface MessengerProps {
 
 const Messenger = (props: MessengerProps) => {
   const classNameString = className({
-    'messenger': true,
-    'messenger--error': props.isError
+    [styles.messenger]: true,
+    [styles.messengerError]: props.isError
   });  
 
   return (

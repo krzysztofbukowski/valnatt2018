@@ -35,12 +35,12 @@ export class App extends React.Component<AppProps, {}> {
     const { message } = this.props;
 
     return (
-      <div className="App">
+      <div className={styles.app}>
         {this.props.hasMessage && <Messenger message={message.content} isError={message.isError} />}
-        <div className="search-nav">
+        <div className={styles.searchNav}>
           <Button label="Rensa" />
           <SearchBox placeholder="SKRIV IN DIN ADRESS" />
-          <div className="search-nav__election-selector">
+          <div className={styles.searchNavElectionSelector}>
             <Select
               optionGroups={[
                 {

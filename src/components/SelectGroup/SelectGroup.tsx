@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './SelectGroup.scss';
+import * as styles from './SelectGroup.scss';
 import Select, { SelectProps } from '../Select/Select';
 
 export interface SelectGroupProps {
@@ -34,7 +34,7 @@ class SelectGroup extends React.Component<SelectGroupProps, SelectGroupState> {
     }
 
     return (
-      <div className="select-group">
+      <div className={styles.selectGroup}>
         {
            (children as React.ReactElement<SelectProps>[]).map(
               (component: React.ReactElement<SelectProps>, key: number) => {

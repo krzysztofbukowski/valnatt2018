@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import './Button.scss';
+import * as styles from './Button.scss';
 
 export interface ButtonProps {
   label: string;
@@ -9,6 +9,6 @@ export interface ButtonProps {
 
 export default (props: ButtonProps) => {
   return (
-    <button className="button" onClick={props.onClick}>{props.label}</button>
+    <button className={styles.button} onClick={props.onClick}>{props.label}</button>
   );
 };
