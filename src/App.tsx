@@ -8,6 +8,6 @@ interface AppProps {
 
 export default class App extends React.Component<AppProps, {}> {
   render() {
-    return <div className={styles.App}><Home /></div>;
+    return <div className={styles.app}><Home /></div>;
   }
 }
