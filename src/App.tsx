@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './App.scss';
+import * as styles from './App.scss';
 import Button from './components/Button/Button';
 import Select from './components/Select/Select';
 import SelectGroup from './components/SelectGroup/SelectGroup';
