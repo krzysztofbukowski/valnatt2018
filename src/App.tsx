@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Home from './components/Home';
-import './App.scss';
+import * as styles from './App.scss';
 
 interface AppProps {
   name: string;
@@ -8,6 +8,6 @@ interface AppProps {
 
 export default class App extends React.Component<AppProps, {}> {
   render() {
-    return <div className="App"><Home/></div>;
+    return <div className={styles.App}><Home /></div>;
   }
 }

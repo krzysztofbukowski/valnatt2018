@@ -42,16 +42,19 @@ const config = {
       {
         test: /\.scss$/,
         use: [
-          devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+          devMode ? 'style-loader' : MiniCssExtractPlugin.loader,          
           {
-            loader: 'css-loader',
+            loader: 'typings-for-css-modules-loader',
             options: {
-              sourceMap: true,
+              localIdentName: "[name]--[local]___[hash:base64:10]",
               minimize: {
                 discardComments: { removeAll: true }
-              }
+              },
+              modules: true,
+              namedExport: true,
+              sourceMap: true,
             }
-          },
+          },       
           {
             loader: require.resolve('postcss-loader'),
             options: {
@@ -71,13 +74,13 @@ const config = {
                 }),
               ],
             }
-          },          
+          },
           {
             loader: 'sass-loader',
             options: {
               sourceMap: true
             }
-          }
+          },
         ],
       }
     ]
