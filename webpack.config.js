@@ -47,7 +47,7 @@ const config = {
             loader: 'typings-for-css-modules-loader',
             options: {
               camelCase: true,              
-              localIdentName: "[name]--[local]___[hash:base64:10]",
+              localIdentName: "[name]__[local]--[hash:base64:10]",
               minimize: {
                 discardComments: { removeAll: true }
               },
