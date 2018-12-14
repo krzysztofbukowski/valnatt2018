@@ -31,7 +31,8 @@ export interface AppProps {
 }
 
 export class App extends React.Component<AppProps, {}> {
-  render() {
+
+  public render() {
     const { message } = this.props;
 
     return (
