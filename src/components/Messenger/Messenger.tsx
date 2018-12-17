@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+
 import className from '../../utils/className';
 import * as styles from './messenger.scss';
 
@@ -7,15 +9,28 @@ export interface MessengerProps {
   isError: boolean;
 }
 
-const Messenger = (props: MessengerProps) => {
-  const classNameString = className({
-    [styles.messenger]: true,
-    [styles.messengerError]: props.isError
-  });  
+export default class Messenger extends React.Component<MessengerProps, {}> {
+  private container: HTMLDivElement;
 
-  return (
-    <div className={classNameString}>{props.message}</div>
-  );
-};
+  constructor(props: MessengerProps) {
+    super(props);
+    
+    this.container = document.createElement('div');
+  }
 
-export default Messenger;
+  componentDidMount() {
+    document.body.appendChild(this.container);
+  }
+
+  public render() {
+    const classNameString = className({
+      [styles.messenger]: true,
+      [styles.messengerError]: this.props.isError
+    });
+
+    return ReactDOM.createPortal(
+      <div className={classNameString}>{this.props.message}</div>,
+      this.container
+    );
+  }
+}
