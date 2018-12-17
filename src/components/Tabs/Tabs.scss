@@ -1,6 +1,8 @@
 @import '../../themes/ab';
 
 .tabs {
+  line-height: inherit;
+  
   &__header {
     display: flex;
     flex-direction: row;
