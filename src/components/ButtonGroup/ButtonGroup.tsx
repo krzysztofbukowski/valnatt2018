@@ -48,22 +48,20 @@ export default class ButtonGroup extends React.Component<ButtonGroupProps, Butto
           style={{ left: this.state.borderLeft, width: this.state.borderWidth }}
         />
         {
-          (children as React.ReactElement<ButtonProps>[]).map(
-            (component: React.ReactElement<ButtonProps>, key: number) => {
-              const props: ButtonProps = {
-                ...component.props,
-                onClick: () => {
-                  this.onButtonClick(key, component);
-                }
-              };
+          React.Children.map(children, (component: React.ReactElement<ButtonProps>, key: number) => {
+            const props: ButtonProps = {
+              ...component.props,
+              onClick: () => {
+                this.onButtonClick(key, component);
+              }
+            };
 
-              return (
-                <div key={`button-${key}`} ref={this.ref[key]} className={styles.buttonGroupButton}>
-                  <component.type {...props} />
-                </div>
-              );
-            }
-          )
+            return (
+              <div key={`button-${key}`} ref={this.ref[key]} className={styles.buttonGroupButton}>
+                <component.type {...props}/>
+              </div>
+            );
+          })
         }
       </div>
     );
