@@ -77,19 +77,11 @@ export default class ButtonGroup extends React.Component<ButtonGroupProps, Butto
         this.setState({
           borderLeft: currentNodeRef.offsetLeft,
           borderWidth: currentNodeRef.offsetWidth,
-        });
-
-        setTimeout(
-          () => {
-            this.setState({
               enableAnimation: true
             });
           },
           0
         );
-      },
-      0
-    );
   }
 
   private onButtonClick = (key: number, component: React.ReactElement<ButtonProps>) => {
