@@ -6,10 +6,11 @@ import App from './App';
 import { Provider } from 'react-redux';
 import appStore from './store';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import ErrorHandler from './components/ErrorHandler/ErrorHandler';
 
 ReactDOM.render(
   <Provider store={appStore}>
-    <ErrorBoundary fallbackUI={''}>
+    <ErrorBoundary fallbackUI={<ErrorHandler/>}>
       <App />
     </ErrorBoundary>
   </Provider>,

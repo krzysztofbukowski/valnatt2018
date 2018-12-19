@@ -11,9 +11,7 @@ interface ButtonGroupState {
   enableAnimation: boolean;
 }
 
-export interface ButtonGroupProps {
-
-}
+export interface ButtonGroupProps {}
 
 export default class ButtonGroup extends React.Component<ButtonGroupProps, ButtonGroupState> {
 
@@ -77,11 +75,11 @@ export default class ButtonGroup extends React.Component<ButtonGroupProps, Butto
         this.setState({
           borderLeft: currentNodeRef.offsetLeft,
           borderWidth: currentNodeRef.offsetWidth,
-              enableAnimation: true
-            });
-          },
-          0
-        );
+          enableAnimation: true
+        });
+      },
+      0
+    );
   }
 
   private onButtonClick = (key: number, component: React.ReactElement<ButtonProps>) => {

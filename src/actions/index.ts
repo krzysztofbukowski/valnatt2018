@@ -105,7 +105,9 @@ export const loadDataForArea = (areaId: string) =>
   (dispatch) => Promise.all([
     dispatch(loadElectionResults(areaId)),
     dispatch(loadGeoData(areaId))
-  ]).then(values => dispatch(receiveDataForArea(values[0], values[1]))).catch((e) => {
+  ])
+  .then(values => dispatch(receiveDataForArea(values[0], values[1])))
+  .catch((e) => {
     dispatch(setMessage({ isError: true, content: `Error loading data for ${areaId}` }));
   });
 

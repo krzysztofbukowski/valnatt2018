@@ -6,7 +6,7 @@ import { Fragment } from 'react';
 describe(`${withErrorBoundary.name}`, () => {
   it(`should wrap component with ${ErrorBoundary.name}`, () => {
     const MockedComponent = () => 'test';
-    const FallbackUIComponent: Element = () => <div></div>;
+    const FallbackUIComponent = () => <div></div>;
 
     const WithErrorBoundaryComponent = withErrorBoundary(MockedComponent, FallbackUIComponent)({test: 1});
 
