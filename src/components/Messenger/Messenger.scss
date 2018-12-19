@@ -11,6 +11,8 @@
   padding: 16px;
   position: absolute;
   width: calc(100% - #{2 * $gridSize3x});
+  left: 50%;
+  transform: translateX(-50%);
 
   &--error {
     background: $error-color;
