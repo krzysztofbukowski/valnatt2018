@@ -3,13 +3,15 @@ import * as ReactDOM from 'react-dom';
 
 import className from '../../utils/className';
 import * as styles from './messenger.scss';
+import { connect } from 'react-redux';
+import AppState, { MessageState } from '../../state';
 
 export interface MessengerProps {
-  message: string;
-  isError: boolean;
+  message?: MessageState;
+  isError?: boolean;
 }
 
-export default class Messenger extends React.Component<MessengerProps, {}> {
+export class Messenger extends React.Component<MessengerProps, {}> {
   private container: HTMLDivElement;
 
   constructor(props: MessengerProps) {
@@ -23,14 +25,24 @@ export default class Messenger extends React.Component<MessengerProps, {}> {
   }
 
   public render() {
+    if (!this.props.message) {
+      return null;
+    }
+
     const classNameString = className({
       [styles.messenger]: true,
-      [styles.messengerError]: this.props.isError
+      [styles.messengerError]: this.props.message.isError
     });
 
     return ReactDOM.createPortal(
-      <div className={classNameString}>{this.props.message}</div>,
+      <div className={classNameString}>{this.props.message.content}</div>,
       this.container
     );
   }
 }
+
+const mapStateToProps = (state: AppState): MessengerProps => ({
+  message: state.message
+});
+
+export default connect(mapStateToProps)(Messenger);

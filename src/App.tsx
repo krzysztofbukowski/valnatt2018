@@ -26,18 +26,13 @@ export interface AppProps {
   currentElections: any[];
   pastElections: any[];
   dispatch: AppPropsDispatch;
-  hasMessage: boolean;
-  message: MessageState;
 }
 
 export class App extends React.Component<AppProps, {}> {
-
   public render() {
-    const { message } = this.props;
-
     return (
       <div className={styles.app}>
-        {this.props.hasMessage && <Messenger message={message.content} isError={message.isError} />}
+        <Messenger />
         <div className={styles.searchNav}>
           <Button label="Rensa" />
           <SearchBox placeholder="SKRIV IN DIN ADRESS" />
@@ -110,9 +105,7 @@ const mapStateToProps = (state: AppState): AppProps => ({
   name: '',
   currentElections: state.currentElections,
   pastElections: state.pastElections,
-  dispatch: {} as AppPropsDispatch,
-  hasMessage: !!state.message,
-  message: state.message
+  dispatch: {} as AppPropsDispatch
 });
 
 const mapDispatchToProps = dispatch => ({
