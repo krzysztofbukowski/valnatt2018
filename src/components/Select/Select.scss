@@ -16,6 +16,7 @@
 
   &:disabled {
     background-color: $select-background-color-disabled;
+    color: $select-color-disabled;
   }
 
   &.selected {
