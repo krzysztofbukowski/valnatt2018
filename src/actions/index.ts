@@ -51,11 +51,11 @@ export const receiveElectionResults = (results: any): ReceiveElectionResultsActi
   }
 );
 
-export const loadElectionResults = (areaId: string) =>
+export const loadElectionResults = (areaId: string, election: string) =>
   (dispatch: Dispatch): Promise<{}> => {
     dispatch(requestElectionResults(areaId));
 
-    return fetch(`http://localhost:4000/api/election/val2018R/${areaId}?slutresultat_r`)
+    return fetch(`//valnattapi.aftonbladet.se/api/election/${election}/${areaId}?slutresultat_r`)
       .then((res: Response) => {
         if (!res.ok) {
           throw new Error('No response');
@@ -69,13 +69,13 @@ export const loadElectionResults = (areaId: string) =>
       });
   };
 
-export const loadGeoData = (areaId: string) =>
+export const loadGeoData = (areaId: string, election: string) =>
   (dispatch) => {
     dispatch(requestGeoData(areaId));
 
     const level = mapAreaIdToMapResolution(areaId);
 
-    return fetch(`http://localhost:4000/api/topojson/val2018/${areaId}/${level}`)
+    return fetch(`//valnattapi.aftonbladet.se/api/topojson/${election}/${areaId}/${level}`)
       .then((res: Response) => {
         if (!res.ok) {
           throw new Error('No response');
@@ -101,10 +101,10 @@ export const receiveGeoData = (topojson) => (
   }
 );
 
-export const loadDataForArea = (areaId: string) =>
+export const loadDataForArea = (areaId: string, election: string) =>
   (dispatch) => Promise.all([
-    dispatch(loadElectionResults(areaId)),
-    dispatch(loadGeoData(areaId))
+    dispatch(loadElectionResults(areaId, election)),
+    dispatch(loadGeoData(areaId, election))
   ])
   .then(values => dispatch(receiveDataForArea(values[0], values[1])))
   .catch((e) => {

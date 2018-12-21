@@ -14,7 +14,7 @@ import ButtonGroup from './components/ButtonGroup/ButtonGroup';
 import Messenger from './components/Messenger/Messenger';
 
 interface AppPropsDispatch {
-  onAreaChanged: (areaId: string) => void;
+  onAreaChanged: (areaId: string, election: string) => void;
 }
 
 export interface AppProps {
@@ -23,6 +23,7 @@ export interface AppProps {
   kommun: Array<Area>;
   valkrets: Array<Area>;
   valdistrikt: Array<Area>;
+  currentElection: string;
   currentElections: any[];
   pastElections: any[];
   dispatch: AppPropsDispatch;
@@ -58,22 +59,22 @@ export class App extends React.Component<AppProps, {}> {
           <Select options={this.props.lan}
             name="county"
             title="Välj län"
-            onChange={this.props.dispatch.onAreaChanged}
+            onChange={this.handleAreaChange}
           />
           <Select options={this.props.kommun}
             name="municipality"
             title="Välj kommun"
-            onChange={this.props.dispatch.onAreaChanged}
+            onChange={this.handleAreaChange}
           />
           <Select options={this.props.valkrets}
             name="division"
             title="Välj valkrets"
-            onChange={this.props.dispatch.onAreaChanged}
+            onChange={this.handleAreaChange}
           />
           <Select options={this.props.valdistrikt}
             name="constituency"
             title="Välj valdistrikt"
-            onChange={this.props.dispatch.onAreaChanged}
+            onChange={this.handleAreaChange}
           />
         </SelectGroup>
         <Tabs tabs={['Alla partier', 'Välj ett parti']}>
@@ -93,7 +94,11 @@ export class App extends React.Component<AppProps, {}> {
   }
 
   public componentDidMount() {
-    this.props.dispatch.onAreaChanged('national');
+    this.handleAreaChange('national');
+  }
+
+  handleAreaChange = (areaId: string) => {
+    this.props.dispatch.onAreaChanged(areaId, this.props.currentElection);
   }
 }
 
@@ -105,15 +110,16 @@ const mapStateToProps = (state: AppState): AppProps => ({
   name: '',
   currentElections: state.currentElections,
   pastElections: state.pastElections,
+  currentElection: state.currentElection,
   dispatch: {} as AppPropsDispatch
 });
 
 const mapDispatchToProps = dispatch => ({
   dispatch: {
-    onAreaChanged: (areaId: string) => {
+    onAreaChanged: (areaId: string, election: string) => {
       dispatch(actions.resetSelect(mapAreaIdToAreaLevel(areaId) as AREA_LEVEL));
       dispatch(actions.setAreaId(areaId));
-      dispatch(actions.loadDataForArea(areaId));
+      dispatch(actions.loadDataForArea(areaId, election));
     }
   }
 });

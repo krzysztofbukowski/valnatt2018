@@ -17,4 +17,5 @@ export default interface AppState {
   results: any;
   currentElections: any[];
   pastElections: any[];
+  currentElection: string;
 }

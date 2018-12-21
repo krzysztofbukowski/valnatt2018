@@ -14,31 +14,32 @@ const initialState: AppState = {
   valkrets: [],
   valdistrikt: [],
   results: null,
+  currentElection: 'val2018R',
   currentElections: [
     {
-      id: 'election_val2018R',
+      id: 'val2018R',
       name: 'Riksdagsval 2018'
     },
     {
-      id: 'election_val2018K',
+      id: 'val2018K',
       name: 'Landstingsval 2018'
     },
     {
-      id: 'election_val2018L',
+      id: 'val2018L',
       name: 'Kommunalval 2018'
     }
   ],
   pastElections: [
     {
-      id: 'election_val2014R',
+      id: 'val2014R',
       name: 'Riksdagsval 2014'
     },
     {
-      id: 'election_val2014K',
+      id: 'val2014K',
       name: 'Landstingsval 2014'
     },
     {
-      id: 'election_val2014L',
+      id: 'val2014L',
       name: 'Kommunalval 2014'
     }
   ],
