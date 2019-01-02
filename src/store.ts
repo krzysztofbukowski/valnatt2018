@@ -1,11 +1,13 @@
 import { applyMiddleware, createStore, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import ReduxQuerySync from 'redux-query-sync';
 import AppState from './state';
 import valnattAppReducers from './reducers';
 import { AREA_LEVEL } from './utils/map';
+import { setArea } from './actions';
 
 const initialState: AppState = {
-  areaId: 'national',
+  area: 'national',
   areaLevel: AREA_LEVEL.NATIONAL,
   nextAreaLevel: AREA_LEVEL.LAN,
   message: null,
@@ -14,7 +16,7 @@ const initialState: AppState = {
   valkrets: [],
   valdistrikt: [],
   results: null,
-  currentElection: 'val2018R',
+  election: 'val2018R',
   currentElections: [
     {
       id: 'val2018R',
@@ -53,7 +55,7 @@ declare global {
 
 const composeEnhancers =
   typeof window === 'object' &&
-  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?   
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) : compose;
 
 const enhancer = composeEnhancers(
@@ -61,5 +63,20 @@ const enhancer = composeEnhancers(
   // other store enhancers if any
 );
 const store = createStore(valnattAppReducers, initialState, enhancer);
+
+ReduxQuerySync({
+  store,
+  params: {
+    area: {
+      selector: state => state.area,
+      action: value => setArea(value),
+      defaultValue: initialState.area,
+      stringToValue: value => value || initialState.area
+    }
+  },
+  // Initially set the store's state to the current location.
+  initialTruth: 'location',
+  replaceState: true
+});
 
 export default store;

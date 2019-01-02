@@ -6,7 +6,7 @@ export interface MessageState {
 }
 
 export default interface AppState {
-  areaId: string;
+  area: string;
   areaLevel: AREA_LEVEL;
   nextAreaLevel: AREA_LEVEL;
   kommun: Area[];
@@ -17,5 +17,5 @@ export default interface AppState {
   results: any;
   currentElections: any[];
   pastElections: any[];
-  currentElection: string;
+  election: string;
 }

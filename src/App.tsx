@@ -2,22 +2,25 @@ import * as React from 'react';
 import * as styles from './App.scss';
 import Button from './components/Button/Button';
 import Select from './components/Select/Select';
-import SelectGroup from './components/SelectGroup/SelectGroup';
 import Tabs from './components/Tabs/Tabs';
 import TabContent from './components/Tabs/TabContent';
 import SearchBox from './components/SearchBox/SearchBox';
 import { connect } from 'react-redux';
-import AppState, { MessageState } from './state';
+
+import AppState from './state';
 import * as actions from './actions';
-import { Area, mapAreaIdToAreaLevel, AREA_LEVEL } from './utils/map';
+import { Area, mapAreaToAreaLevel, AREA_LEVEL, decodeArea } from './utils/map';
 import ButtonGroup from './components/ButtonGroup/ButtonGroup';
 import Messenger from './components/Messenger/Messenger';
+import AreaSelector from './components/AreaSelector/AreaSelector';
 
 interface AppPropsDispatch {
-  onAreaChanged: (areaId: string, election: string) => void;
+  onAreaChanged: (area: string, election: string) => void;
+  loadDataForArea: (area: string, election: string) => void;
 }
 
 export interface AppProps {
+  currentArea: string;
   name: string;
   lan: Array<Area>;
   kommun: Array<Area>;
@@ -31,6 +34,8 @@ export interface AppProps {
 
 export class App extends React.Component<AppProps, {}> {
   public render() {
+    const { lan, kommun, valkrets, valdistrikt } = this.props;
+
     return (
       <div className={styles.app}>
         <Messenger />
@@ -55,28 +60,15 @@ export class App extends React.Component<AppProps, {}> {
           </div>
         </div>
 
-        <SelectGroup name="area">
-          <Select options={this.props.lan}
-            name="county"
-            title="Välj län"
-            onChange={this.handleAreaChange}
-          />
-          <Select options={this.props.kommun}
-            name="municipality"
-            title="Välj kommun"
-            onChange={this.handleAreaChange}
-          />
-          <Select options={this.props.valkrets}
-            name="division"
-            title="Välj valkrets"
-            onChange={this.handleAreaChange}
-          />
-          <Select options={this.props.valdistrikt}
-            name="constituency"
-            title="Välj valdistrikt"
-            onChange={this.handleAreaChange}
-          />
-        </SelectGroup>
+        <AreaSelector
+          current={this.props.currentArea}
+          onChange={this.handleAreaChange}
+          lan={lan}
+          kommun={kommun}
+          valdistrikt={valdistrikt}
+          valkrets={valkrets}
+        />
+
         <Tabs tabs={['Alla partier', 'Välj ett parti']}>
           <TabContent>
             <ButtonGroup>
@@ -94,15 +86,26 @@ export class App extends React.Component<AppProps, {}> {
   }
 
   public componentDidMount() {
-    this.handleAreaChange('national');
+    const decodedArea = decodeArea(this.props.currentArea);
+
+    const areas = Object
+      .values(decodedArea)
+      .filter((area: string | null) => area !== null);
+
+    areas.unshift('national');
+
+    areas.forEach((area: string) => {
+      this.props.dispatch.loadDataForArea(area, this.props.currentElection);      
+    });
   }
 
-  handleAreaChange = (areaId: string) => {
-    this.props.dispatch.onAreaChanged(areaId, this.props.currentElection);
+  handleAreaChange = (area: string) => {
+    this.props.dispatch.onAreaChanged(area || 'national', this.props.currentElection);
   }
 }
 
 const mapStateToProps = (state: AppState): AppProps => ({
+  currentArea: state.area,
   lan: state.lan,
   kommun: state.kommun,
   valkrets: state.valkrets,
@@ -110,16 +113,19 @@ const mapStateToProps = (state: AppState): AppProps => ({
   name: '',
   currentElections: state.currentElections,
   pastElections: state.pastElections,
-  currentElection: state.currentElection,
+  currentElection: state.election,
   dispatch: {} as AppPropsDispatch
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   dispatch: {
-    onAreaChanged: (areaId: string, election: string) => {
-      dispatch(actions.resetSelect(mapAreaIdToAreaLevel(areaId) as AREA_LEVEL));
-      dispatch(actions.setAreaId(areaId));
-      dispatch(actions.loadDataForArea(areaId, election));
+    loadDataForArea: (area: string | null, election: string) => {
+      dispatch(actions.loadDataForArea(area, election));
+    },
+    onAreaChanged: (area: string, election: string) => {
+      // dispatch(actions.resetSelect(mapAreaToAreaLevel(area) as AREA_LEVEL));
+      dispatch(actions.setArea(area));
+      dispatch(actions.loadDataForArea(area, election));
     }
   }
 });

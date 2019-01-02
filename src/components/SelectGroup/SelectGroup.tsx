@@ -1,30 +1,33 @@
 import * as React from 'react';
 import * as styles from './SelectGroup.scss';
-import Select, { SelectProps } from '../Select/Select';
+import { SelectProps } from '../Select/Select';
 
 export interface SelectGroupProps {
   name: string;
+  onChange?: (value: string | null) => void;
 }
 
 export interface SelectGroupState {
-  isSelected: boolean[];
+  currentValue: string[];
 }
 
 class SelectGroup extends React.Component<SelectGroupProps, SelectGroupState> {
   constructor(props: SelectGroupProps) {
     super(props);
 
-    // Adding one element extra to the array to avoid index out of range errors in the render method
-    const length = this.props.children ? (this.props.children as Select[]).length + 1 : 0;
+    let currentValue = new Array(React.Children.count(this.props.children));    
+
+    React.Children.forEach(this.props.children, (child: React.ReactElement<SelectProps>, index: number) => {
+      currentValue[index] = child.props.current;
+    });
 
     this.state = {
-      // fill first element with true and the rest with false
-      isSelected: (Array.apply(null, { length })).map((i, k) => k === 0)
+      currentValue
     };
-
   }
+
   render() {
-    const {children} = this.props;
+    const { children } = this.props;
     if (children === undefined) {
       throw new TypeError('SelectGroup component needs to have at least 2 children');
     }
@@ -36,50 +39,49 @@ class SelectGroup extends React.Component<SelectGroupProps, SelectGroupState> {
     return (
       <div className={styles.selectGroup}>
         {
-           (children as React.ReactElement<SelectProps>[]).map(
-              (component: React.ReactElement<SelectProps>, key: number) => {
-                const props = {
-                  ...component.props,
-                  disabled: !this.state.isSelected[key],
-                  options: !this.state.isSelected[key] ? {} : component.props.options,
-                  current: !this.state.isSelected[key] ? undefined : component.props.current,
-                  onChange: (value: string) => {
-                    this.onChange(key, component, value);
-                  },
-                  onReset: () => {
-                    this.onReset(key, component);
-                  },
-                };
-
-                return (
-                  <component.type key={`select-${key}`} {...props} />
-                );
-              }
-            )
+          React.Children.map(this.props.children, this.mapChild)
         }
       </div>
     );
   }
 
-  private onReset(key: number, component: React.ReactElement<SelectProps>) {
-    this.setState((prevState: SelectGroupState) => {
-      for (let i = key + 1; i < prevState.isSelected.length; i++) {
-        prevState.isSelected[i] = false;
+  mapChild = (child: React.ReactElement<SelectProps>, key: number) => {
+    const Component = child.type;
+    const { options } = child.props;
+    const { currentValue } = this.state;
+
+    const props = {
+      ...child.props,
+      disabled: key > 0 && typeof (currentValue[key - 1]) !== 'string',
+      options: options,
+      current: currentValue[key],
+      onChange: (value: string) => {
+        this.onChange(key, value);
       }
-      return prevState;
-    });
-    if (component.props.onReset) {
-      component.props.onReset();
-    }
+    };
+
+    return (<Component key={`select-${key}`} {...props} />);
   }
 
-  private onChange(key: number, component: React.ReactElement<SelectProps>, value: string) {
+  onChange = (key: number, value: string | null) => {
     this.setState((prevState: SelectGroupState) => {
-      prevState.isSelected[key + 1] = true;
-      return prevState;
+      const newValues = Array.from(prevState.currentValue);
+      newValues[key] = value;
+
+      for (let i = key + 1; i < newValues.length; i++) {
+        newValues[i] = null;
+      }
+
+      return { ...prevState, currentValue: newValues };
     });
-    if (component.props.onChange) {
-      component.props.onChange(value);
+
+    let nextValue = value;
+    if (nextValue === null && key > 0) {
+      nextValue = this.state.currentValue[key - 1];
+    }
+
+    if (this.props.onChange) {
+      this.props.onChange(nextValue);
     }
   }
 }

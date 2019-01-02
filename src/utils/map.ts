@@ -11,7 +11,7 @@ export interface Area {
   name: string;
 }
 
-export const mapAreaIdToAreaLevel = (areaId: string) => {
+export const mapAreaToAreaLevel = (areaId: string) => {
   if ('national' === areaId) {
     return 'national';
   }
@@ -52,6 +52,33 @@ export const mapTopojsonToAreas = (results: any): Area[] => results.map(
     name: object.properties.VD_NAMN 
       || object.properties.KVK_NAMN
       || object.properties.NAMN_KOM
-      || object.properties.LAN_NAMN,
+      || object.properties.LAN_NAMN
+      || object.properties.VDNAMN,
     id: object.properties.ID
   }));
+
+export const mapElectionToTopojson = (election) => election.slice(0, -1);
+
+export const decodeArea = (area: string): {[key: string]: string} => {
+  let lan = null;
+  let kommun = null;
+  let valkrets = null;
+  let valdistrikt = null;
+
+  if (area.length <= 6 && area !== 'national') {
+    lan = area.length >= 2 ? area.slice(0, 2) : null;
+    kommun = area.length >= 4 ? area.slice(0, 4) : null;
+    valkrets = area.length >= 6 ? area.slice(0, 6) : null;
+    valdistrikt = null;
+  } else {
+    // cover valdistrikt case somehow
+    valdistrikt = area;
+  }
+
+  return {
+    lan,
+    kommun,
+    valkrets,
+    valdistrikt
+  };
+};

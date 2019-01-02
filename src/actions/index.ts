@@ -1,10 +1,10 @@
 import { ACTIONS } from './types';
 import { AnyAction, Dispatch } from 'redux';
-import { AREA_LEVEL, mapAreaIdToMapResolution } from '../utils/map';
+import { AREA_LEVEL, mapAreaIdToMapResolution, mapElectionToTopojson, mapAreaToAreaLevel } from '../utils/map';
 import { MessageState } from '../state';
 
 export interface SetAreaAction extends AnyAction {
-  areaId: string;
+  area: string;
 }
 
 export interface ReceiveElectionResultsAction extends AnyAction {
@@ -25,10 +25,10 @@ export interface SetMessageAction extends AnyAction {
 
 export type ReceiveDataAction = ReceiveElectionResultsAction & ReceiveGeodataAction;
 
-export const setAreaId = (areaId: string): SetAreaAction => (
+export const setArea = (area: string): SetAreaAction => (
   {
-    type: ACTIONS.SET_AREA_ID,
-    areaId
+    type: ACTIONS.SET_AREA,
+    area
   }
 );
 
@@ -39,9 +39,9 @@ export const setMessage = (message: MessageState): SetMessageAction => (
   }
 );
 
-export const requestElectionResults = (areaId: string) => ({
+export const requestElectionResults = (area: string) => ({
   type: ACTIONS.REQUEST_ELECTION_RESULTS,
-  areaId
+  area
 });
 
 export const receiveElectionResults = (results: any): ReceiveElectionResultsAction => (
@@ -51,11 +51,11 @@ export const receiveElectionResults = (results: any): ReceiveElectionResultsActi
   }
 );
 
-export const loadElectionResults = (areaId: string, election: string) =>
+export const loadElectionResults = (area: string, election: string) =>
   (dispatch: Dispatch): Promise<{}> => {
-    dispatch(requestElectionResults(areaId));
+    dispatch(requestElectionResults(area));
 
-    return fetch(`//valnattapi.aftonbladet.se/api/election/${election}/${areaId}?slutresultat_r`)
+    return fetch(`//valnattapi.aftonbladet.se/api/election/${election}/${area}?slutresultat_r`)
       .then((res: Response) => {
         if (!res.ok) {
           throw new Error('No response');
@@ -69,13 +69,14 @@ export const loadElectionResults = (areaId: string, election: string) =>
       });
   };
 
-export const loadGeoData = (areaId: string, election: string) =>
+export const loadGeoData = (area: string, election: string) =>
   (dispatch) => {
-    dispatch(requestGeoData(areaId));
+    dispatch(requestGeoData(area));
 
-    const level = mapAreaIdToMapResolution(areaId);
+    const level = mapAreaIdToMapResolution(area);
+    election = mapElectionToTopojson(election);
 
-    return fetch(`//valnattapi.aftonbladet.se/api/topojson/${election}/${areaId}/${level}`)
+    return fetch(`//valnattapi.aftonbladet.se/api/topojson/${election}/${area}/${level}`)
       .then((res: Response) => {
         if (!res.ok) {
           throw new Error('No response');
@@ -89,9 +90,9 @@ export const loadGeoData = (areaId: string, election: string) =>
       });
   };
 
-const requestGeoData = (areaId: string) => ({
+const requestGeoData = (area: string) => ({
   type: ACTIONS.REQUEST_GEODATA,
-  areaId
+  area
 });
 
 export const receiveGeoData = (topojson) => (
@@ -101,20 +102,22 @@ export const receiveGeoData = (topojson) => (
   }
 );
 
-export const loadDataForArea = (areaId: string, election: string) =>
+export const loadDataForArea = (area: string, election: string) =>
   (dispatch) => Promise.all([
-    dispatch(loadElectionResults(areaId, election)),
-    dispatch(loadGeoData(areaId, election))
+    dispatch(loadElectionResults(area, election)),
+    dispatch(loadGeoData(area, election))
   ])
-  .then(values => dispatch(receiveDataForArea(values[0], values[1])))
+  .then(values => dispatch(receiveDataForArea(values[0], values[1], mapAreaToAreaLevel(area) as AREA_LEVEL)))
   .catch((e) => {
-    dispatch(setMessage({ isError: true, content: `Error loading data for ${areaId}` }));
+    console.log(e);
+    dispatch(setMessage({ isError: true, content: `Error loading data for ${area}` }));
   });
 
-export const receiveDataForArea = (results: any, topojson: any) => ({
+export const receiveDataForArea = (results: any, topojson: any, areaLevel: AREA_LEVEL) => ({
   type: ACTIONS.RECEIVE_DATA_FOR_AREA,
   results,
-  topojson
+  topojson,
+  areaLevel
 });
 
 export const resetSelect = (areaLevel: AREA_LEVEL) => ({

@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SelectGroup should render correctly 1`] = `
+<div>
+  <select
+    className=""
+    disabled={false}
+    name="country"
+    onChange={[Function]}
+    value=""
+  >
+    <option
+      value={null}
+    >
+      - 
+      country
+       -
+    </option>
+  </select>
+  <select
+    className=""
+    disabled={true}
+    name="city"
+    onChange={[Function]}
+    value=""
+  >
+    <option
+      value={null}
+    >
+      - 
+      city
+       -
+    </option>
+  </select>
+</div>
+`;

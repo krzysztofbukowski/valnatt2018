@@ -5,13 +5,13 @@ import * as MapUtils from '../utils/map';
 
 export default (prevState: AppState, action: AnyAction) => {
   switch (action.type) {
-    case ACTIONS.SET_AREA_ID:
-      const setAreaIdAction = action as SetAreaAction;
-      const areaLevel = MapUtils.mapAreaIdToAreaLevel(setAreaIdAction.areaId) as MapUtils.AREA_LEVEL;
+    case ACTIONS.SET_AREA:
+      const setAreaAction = action as SetAreaAction;
+      const areaLevel = MapUtils.mapAreaToAreaLevel(setAreaAction.area) as MapUtils.AREA_LEVEL;
 
       return {
         ...prevState,
-        areaId: setAreaIdAction.areaId,
+        area: setAreaAction.area,
         areaLevel,
         nextAreaLevel: MapUtils.mapAreaLevelToNextAreaLevel(areaLevel)
       };
@@ -29,25 +29,32 @@ export default (prevState: AppState, action: AnyAction) => {
       const receiveGeodataAction = action as ReceiveDataAction;
       const key = receiveGeodataAction.topojson.key;
       const geometries = receiveGeodataAction.topojson.objects[key].geometries;
-      let nextAreaLevel = prevState.nextAreaLevel;
       
-      switch (nextAreaLevel) {
-        case MapUtils.AREA_LEVEL.LAN:
+      switch (action.areaLevel) {
+        case MapUtils.AREA_LEVEL.NATIONAL:
           return {
             ...prevState,
             lan: withSort(MapUtils.mapTopojsonToAreas(geometries))
           };
-        case MapUtils.AREA_LEVEL.KOMMUN:
+        case MapUtils.AREA_LEVEL.LAN:
           return {
             ...prevState,
             kommun: withSort(MapUtils.mapTopojsonToAreas(geometries))
           };
+        case MapUtils.AREA_LEVEL.KOMMUN:
+          if (Object.keys(receiveGeodataAction.results.kommun_kretsar).length === 1) {
+            return {
+              ...prevState,
+              valkrets: prevState.kommun.filter((area) => area.id === prevState.area),
+              valdistrikt: withSort(MapUtils.mapTopojsonToAreas(geometries))
+            };
+          } else {
+            return {
+              ...prevState,
+              valkrets: withSort(MapUtils.mapTopojsonToAreas(geometries))
+            };
+          }
         case MapUtils.AREA_LEVEL.VALKRETS:
-          return {
-            ...prevState,
-            valkrets: withSort(MapUtils.mapTopojsonToAreas(geometries))
-          };
-        case MapUtils.AREA_LEVEL.VALDISTRIKT:
           return {
             ...prevState,
             valdistrikt: withSort(MapUtils.mapTopojsonToAreas(geometries))
@@ -81,7 +88,7 @@ export default (prevState: AppState, action: AnyAction) => {
 };
 
 const withSort = (areas: MapUtils.Area[]) =>
-  areas.sort((a: MapUtils.Area, b: MapUtils.Area) => {
+  areas.sort((a: MapUtils.Area = {name: '', id: ''}, b: MapUtils.Area = {name: '', id: ''}) => {
     const aName = a.name.toLocaleLowerCase();
     const bName = b.name.toLocaleLowerCase();
     if (aName > bName) {

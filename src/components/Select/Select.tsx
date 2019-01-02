@@ -10,12 +10,11 @@ export interface OptionGroup {
 export interface SelectProps {
   name: string;
   title?: string;
-  options?: {id: string, name: string}[];
+  options?: { id: string, name: string }[];
   optionGroups?: Array<OptionGroup>;
   current?: string;
   disabled?: boolean;
-  onChange?: (value: string) => void;
-  onReset?: () => void;
+  onChange?: (value: string | null) => void;
 }
 
 interface SelectState {
@@ -32,6 +31,14 @@ class Select extends React.Component<SelectProps, SelectState> {
     };
   }
 
+  componentDidUpdate(prevProps: SelectProps) {
+    if (this.props.current !== prevProps.current) {
+      this.setState({
+        isSelected: !!this.props.current
+      });
+    }
+  }
+
   render() {
     const { options, name, current, title, optionGroups } = this.props;
     const hasOptions = this.hasOptions(options);
@@ -46,10 +53,10 @@ class Select extends React.Component<SelectProps, SelectState> {
       <select
         name={name}
         className={className(classes)}
-        disabled={!!this.props.disabled}
-        defaultValue={current}
+        disabled={this.props.disabled}
         onChange={this.onChange}
-      >
+        value={current || ''}
+      >      
         {title && <option key={-1} value={null}>- {title} -</option>}
         {hasOptionGroups && this.renderOptionGroups(optionGroups)}
         {!hasOptionGroups && hasOptions && this.renderOptions(options)}
@@ -57,15 +64,7 @@ class Select extends React.Component<SelectProps, SelectState> {
     );
   }
 
-  componentDidUpdate(prevProps: SelectProps) {
-    if (this.props !== prevProps && !this.hasOptions(prevProps.options)) {
-      this.setState({
-        isSelected: false
-      });
-    }
-  }
-
-  private hasOptions(options: {id: string, name: string}[]) {
+  private hasOptions(options: { id: string, name: string }[]) {
     return options && options.length > 0;
   }
 
@@ -73,8 +72,8 @@ class Select extends React.Component<SelectProps, SelectState> {
     return options && Object.keys(options).length > 0;
   }
 
-  private renderOptions(options: {id: string, name: string}[]) {
-    return options.map((option: {id: string, name: string}, optionIndex: number) => {
+  private renderOptions(options: { id: string, name: string }[]) {
+    return options.map((option: { id: string, name: string }, optionIndex: number) => {
       return (
         <option key={optionIndex} value={option.id}>{option.name}</option>
       );
@@ -100,10 +99,8 @@ class Select extends React.Component<SelectProps, SelectState> {
       isSelected: isSelected
     });
 
-    if (isSelected && this.props.onChange) {
-      this.props.onChange(event.target.value);
-    } else if (!isSelected && this.props.onReset) {
-      this.props.onReset();
+    if (this.props.onChange) {
+      this.props.onChange(isSelected ? event.target.value : null);
     }
   }
 }
