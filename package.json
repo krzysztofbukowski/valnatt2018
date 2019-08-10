@@ -3,11 +3,13 @@
   "author": "Krzysztof Bukowski",
   "scripts": {
     "build": "webpack",
+    "pretify": "prettier --write --parser typescript 'src/**/*.{ts,tsx}'",
     "start": "webpack-dev-server",
     "test": "jest",
     "tslint": "tslint --project tsconfig.json"
   },
   "dependencies": {
+    "precise-commits": "^1.0.2",
     "react": "16.4.1",
     "react-dom": "16.4.1",
     "react-redux": "5.0.7",
@@ -33,6 +35,7 @@
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "1.1.1",
     "html-webpack-plugin": "3.2.0",
+    "husky": "^3.0.3",
     "jest": "^24.4.0",
     "jest-css-modules": "^1.1.0",
     "mini-css-extract-plugin": "0.4.1",
@@ -40,6 +43,7 @@
     "postcss": "7.0.1",
     "postcss-flexbugs-fixes": "4.0.0",
     "postcss-loader": "2.1.6",
+    "prettier": "^1.18.2",
     "react-test-renderer": "16.4.1",
     "redux-logger": "^3.0.6",
     "sass-loader": "7.0.3",
@@ -52,6 +56,11 @@
     "webpack": "4.15.1",
     "webpack-cli": "3.0.8",
     "webpack-dev-server": "^3.2.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "precise-commits"
+    }
   },
   "jest": {
     "setupFiles": [
@@ -70,6 +79,13 @@
       "json",
       "node"
     ]
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "tabWidth": 2,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true
   },
   "proxy": "http://localhost:5000"
 }
